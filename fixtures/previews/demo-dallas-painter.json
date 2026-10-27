@@ -1,0 +1,69 @@
+{
+  "business": {
+    "name": "Lone Oak Painting Co.",
+    "category": "Painting contractor",
+    "city": "Dallas",
+    "phone": "+1 214 555 0142",
+    "email": "hello@loneoakpainting.com",
+    "rating": 4.9,
+    "reviewCount": 87
+  },
+  "theme": { "palette": "forest", "type": "grotesk", "radius": "lg" },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "House painters in North Dallas",
+      "headline": "Interior and exterior painting, done tidy",
+      "subheadline": "Walls, trim, cabinets and siding across Richardson, Plano and Lake Highlands. Written quote within two days.",
+      "ctaLabel": "Call for a quote"
+    },
+    {
+      "type": "trust",
+      "items": [
+        { "value": "4.9", "label": "Google rating" },
+        { "value": "87", "label": "Google reviews" },
+        { "value": "2 days", "label": "To a written quote" }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How we work",
+      "body": "Furniture moved, floors covered, edges cut by hand and the room swept before we leave. The prep takes longer than the painting, and that's why it lasts."
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we paint",
+      "intro": "Homes and small offices across North Dallas.",
+      "items": [
+        { "name": "Interior painting", "description": "Walls, ceilings and trim, with furniture moved and floors covered.", "icon": "interior" },
+        { "name": "Exterior painting", "description": "Siding and trim scraped, primed and sealed for Texas sun.", "icon": "exterior" },
+        { "name": "Cabinet refinishing", "description": "Sprayed finish on existing kitchen cabinets.", "icon": "cabinets" },
+        { "name": "Drywall repair", "description": "Cracks and dents patched before any paint goes on.", "icon": "repair" },
+        { "name": "Fences and decks", "description": "Cleaned and stained to slow weathering.", "icon": "deck" }
+      ]
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What neighbours say",
+      "items": [
+        { "author": "Megan Rourke", "rating": 5, "text": "They showed up when they said, covered everything and the lines are perfect." },
+        { "author": "Carlos Duarte", "rating": 5, "text": "Exterior looks brand new. Fair price and they cleaned up every day." },
+        { "author": "Priya Sethi", "rating": 5, "text": "Our cabinets look factory finished." }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": ["Richardson", "Plano", "Lake Highlands", "Garland", "Lakewood", "Preston Hollow"]
+    },
+    {
+      "type": "cta",
+      "headline": "Tell us about the rooms",
+      "body": "Call or email and we'll book a visit and send a written quote within two days."
+    }
+  ]
+}

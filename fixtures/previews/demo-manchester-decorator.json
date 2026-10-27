@@ -1,0 +1,57 @@
+{
+  "business": {
+    "name": "Hartley & Sons Decorators Ltd",
+    "category": "Painter & decorator",
+    "city": "Manchester",
+    "phone": "+44 7700 900123",
+    "rating": 5,
+    "reviewCount": 41
+  },
+  "theme": { "palette": "olive-brick", "type": "heritage", "radius": "none" },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "headline": "Period homes in South Manchester, painted properly",
+      "subheadline": "Wallpapering, sash windows and heritage colours across Didsbury, Chorlton and Sale.",
+      "ctaLabel": "Book a visit"
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "Family on every job",
+      "body": "Hartley & Sons is a father and two sons. No subcontractors, so the people who quote are the people who paint."
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "Our work",
+      "items": [
+        { "name": "Interior decorating", "description": "Walls, ceilings, coving and woodwork, rooms left tidy each evening.", "icon": "interior" },
+        { "name": "Wallpaper hanging", "description": "Lining paper, feature walls and hand-trimmed designer papers.", "icon": "wallpaper" },
+        { "name": "Sash window restoration", "description": "Stripped, filled, primed and painted to keep original timber sound.", "icon": "repair" },
+        { "name": "Exterior painting", "description": "Render, fascias and front doors in breathable masonry paints.", "icon": "exterior" }
+      ]
+    },
+    {
+      "type": "reviews",
+      "variant": "wall",
+      "title": "41 five-star reviews",
+      "items": [
+        { "author": "Helen Whitworth", "rating": 5, "text": "Our Victorian hallway was a nightmare of old paint. They made it look like it did in 1890." },
+        { "author": "James Pemberton", "rating": 5, "text": "Punctual, polite and the wallpaper joins are invisible." },
+        { "author": "Aisha Karim", "rating": 5, "text": "Gave a clear quote and stuck to it. Lovely to have in the house." }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": ["Didsbury", "Chorlton", "Sale", "Withington", "Altrincham", "Stockport"]
+    },
+    {
+      "type": "cta",
+      "headline": "Let's look at your rooms",
+      "body": "We'll visit, look at the job properly and send a fixed written quote."
+    }
+  ]
+}
