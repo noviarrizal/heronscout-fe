@@ -43,6 +43,7 @@ function problems(d: Draft): string[] {
   const out: string[] = [];
   if (d.body.split(PREVIEW_PLACEHOLDER).length !== 2) out.push(`body must contain ${PREVIEW_PLACEHOLDER} exactly once`);
   if (words(d.body) > 110) out.push(`body is ${words(d.body)} words, keep it under 90`);
+  if (!d.body.includes("\n\n")) out.push("split the body into short paragraphs separated by blank lines");
   if (words(d.followUp1) > 50) out.push("followUp1 is too long");
   if (words(d.followUp2) > 40) out.push("followUp2 is too long");
   for (const [field, text] of Object.entries(d)) {

@@ -22,6 +22,9 @@ Copy rules:
 Hard rules (breaking any makes the preview unusable):
 - NEVER invent facts: no years in business, warranties, insurance, licences, prices, guarantees, awards,
   team size or "family-owned" unless the research text says so.
+- Service descriptions say what the service covers, not how they work. Don't claim process or habits
+  (covering floors, moving furniture, prep steps, daily clean-up, turnaround times, weather-proofing, "low-odor")
+  unless the research text or a review says it.
 - "trust" items may only use the rating and review count (only if there are 5+ reviews), service area,
   or facts found in the research. If you have fewer than 2 such facts, leave the trust section out.
 - Review "text" is copied word for word from the provided reviews (you may cut at a sentence boundary).

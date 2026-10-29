@@ -14,13 +14,17 @@
     "build:previews": "tsx scripts/build-previews.ts",
     "draft:emails": "tsx scripts/draft-emails.ts",
     "lead": "tsx scripts/lead.ts",
-    "fetch:apify": "tsx scripts/fetch-apify.ts"
+    "fetch:apify": "tsx scripts/fetch-apify.ts",
+    "send:due": "tsx scripts/send-due.ts",
+    "queue": "tsx scripts/queue.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
     "@phosphor-icons/react": "^2.1.10",
+    "imapflow": "^2.9.1",
     "motion": "^14.6.0",
     "next": "16.4.3",
+    "nodemailer": "^10.2.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "zod": "^4.6.7"
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^18.0.9",

@@ -8,7 +8,7 @@ import { sanitizeCopy, siteSpecSchema, type SiteSpec } from "../src/lib/spec";
 import { sql } from "./lib/db";
 import { enforceFacts, type Review } from "./lib/enforce-facts";
 import { chatJson, type ChatMessage } from "./lib/llm";
-import { canEmail } from "./lib/rules";
+import { canEmail, isGoodFit } from "./lib/rules";
 import { SPEC_SYSTEM_PROMPT } from "./lib/spec-prompt";
 import { digestPage, fetchHtml } from "./lib/web";
 
@@ -124,11 +124,11 @@ const candidates = (await sql`
 
 const queue: Lead[] = [];
 for (const lead of candidates) {
-  if (canEmail(lead)) queue.push(lead);
+  if (canEmail(lead) && isGoodFit(lead)) queue.push(lead);
   else if (!dry) await sql`update leads set status = 'skipped', updated_at = now() where id = ${lead.id}`;
 }
 const batch = queue.slice(0, count);
-console.log(`${batch.length} leads to design (${candidates.length - queue.length} skipped by country rules).`);
+console.log(`${batch.length} leads to design (${candidates.length - queue.length} skipped: country rules or not a trade).`);
 
 const base = process.env.PREVIEW_BASE_URL ?? "http://localhost:3000";
 for (const [i, lead] of batch.entries()) {

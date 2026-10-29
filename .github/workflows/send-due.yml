@@ -1,0 +1,33 @@
+name: Send due emails
+
+# Every 15 minutes during US business hours (13:00-23:59 UTC covers 8am-5pm Central and Arizona), weekdays.
+# Each run sends at most one email; send:due also checks the recipient's local time itself.
+on:
+  schedule:
+    - cron: "*/15 13-23 * * 1-5"
+  workflow_dispatch:
+
+concurrency:
+  group: send-due
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm send:due
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SENDER_NAME: ${{ secrets.SENDER_NAME }}

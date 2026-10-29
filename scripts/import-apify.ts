@@ -4,6 +4,7 @@
 import { readFile } from "node:fs/promises";
 import { sql } from "./lib/db";
 import { countryFromLocation } from "./lib/geo";
+import { businessPhotos } from "./lib/photos";
 
 type ApifyPlace = {
   placeId?: string;
@@ -20,6 +21,7 @@ type ApifyPlace = {
   permanentlyClosed?: boolean;
   temporarilyClosed?: boolean;
   imageUrls?: string[];
+  imageUrl?: string | null;
   reviews?: { name?: string; text?: string; stars?: number }[];
   emails?: string[];
   instagrams?: string[];
@@ -64,7 +66,7 @@ for (const p of places) {
       rating, review_count, maps_url, image_urls, reviews, email, instagram, facebook, company_type, raw)
     values (${p.placeId}, ${p.title}, ${p.categoryName ?? null}, ${p.phone ?? null}, ${p.website ?? null},
       ${p.address ?? null}, ${p.city ?? fallbackCity}, ${p.countryCode ?? countryFromLocation(p.location)}, ${p.totalScore ?? null},
-      ${p.reviewsCount ?? null}, ${p.url ?? null}, ${JSON.stringify(p.imageUrls ?? [])},
+      ${p.reviewsCount ?? null}, ${p.url ?? null}, ${JSON.stringify(businessPhotos(p))},
       ${JSON.stringify(reviews)}, ${p.emails?.[0] ?? null}, ${p.instagrams?.[0] ?? null},
       ${p.facebooks?.[0] ?? null}, ${companyType}, ${JSON.stringify(p)})
     on conflict (place_id) do nothing
