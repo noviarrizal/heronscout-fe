@@ -16,7 +16,9 @@
     "lead": "tsx scripts/lead.ts",
     "fetch:apify": "tsx scripts/fetch-apify.ts",
     "send:due": "tsx scripts/send-due.ts",
-    "queue": "tsx scripts/queue.ts"
+    "queue": "tsx scripts/queue.ts",
+    "scrape": "tsx scripts/scrape.ts",
+    "report": "tsx scripts/report.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",

@@ -53,6 +53,16 @@ create table if not exists messages (
 
 create index if not exists messages_due_idx on messages (status, send_at);
 
+-- One row per city scraped, so the weekly pipeline moves on to new cities.
+create table if not exists scrape_runs (
+  id bigserial primary key,
+  city text not null,
+  search_term text not null,
+  apify_run_id text,
+  places integer,
+  created_at timestamptz not null default now()
+);
+
 -- Checked before every send. Anyone who replies "no" lands here for good.
 create table if not exists suppression (
   email text primary key,

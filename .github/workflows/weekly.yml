@@ -1,0 +1,49 @@
+name: Weekly leads
+
+# Mondays 01:00 UTC (08:00 in Jakarta): scrape new cities, find emails, build previews, draft emails,
+# then email a report. Drafts are NOT sent; approve them with the "Queue emails" workflow.
+on:
+  schedule:
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+    inputs:
+      cities:
+        description: "How many new cities to scrape"
+        default: "2"
+
+concurrency:
+  group: weekly-leads
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    environment: env
+    timeout-minutes: 150
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SENDER_NAME: ${{ secrets.SENDER_NAME }}
+      SENDER_ADDRESS_LINE: ${{ secrets.SENDER_ADDRESS_LINE }}
+      PREVIEW_BASE_URL: https://heronscout.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:migrate
+      - run: pnpm scrape ${{ inputs.cities || '2' }}
+      - run: pnpm find:contacts
+      - run: pnpm build:previews 100
+      - run: pnpm draft:emails 100
+      - run: pnpm report

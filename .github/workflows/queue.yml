@@ -1,0 +1,26 @@
+name: Queue emails
+
+# Approve the next N drafted first emails (best leads first). send-due.yml then sends them slowly.
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many first emails to approve (keep it small: 3 a day in week 1)"
+        default: "3"
+
+jobs:
+  queue:
+    runs-on: ubuntu-latest
+    environment: env
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm queue ${{ inputs.count }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

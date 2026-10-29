@@ -27,6 +27,16 @@ Without `DATABASE_URL`, previews are read from `fixtures/previews/<slug>.json`.
 | 7. Approve first emails for sending | `pnpm queue 5`, `pnpm queue list` | done |
 | 8. Send one due email per run (3 → 5 → 8 → 10/day, 45-120 min apart, recipient's weekday 8am-5pm, stops on reply/bounce) | `pnpm send:due [--dry]`, scheduled by `.github/workflows/send-due.yml` | done |
 
+## Automation
+
+| Workflow | When | What |
+|---|---|---|
+| `weekly.yml` | Mondays 01:00 UTC, or by hand | `scrape` next 2 cities from `config/cities.json` → `find:contacts` → `build:previews` → `draft:emails` → `report` (emails you the drafts waiting) |
+| `queue.yml` | By hand (works from the GitHub mobile app) | Approves the next N first emails |
+| `send-due.yml` | Every 15 min, US weekday hours | Sends one approved email if the cap and spacing allow |
+
+Weekly and queue read secrets from the `env` environment. Send-due reads repository secrets.
+
 GitHub Actions secrets needed for sending: `DATABASE_URL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (Gmail app password), `SENDER_NAME`.
 
 Reply templates and the offer: `docs/reply-templates.md`.
