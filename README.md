@@ -25,7 +25,7 @@ Without `DATABASE_URL`, previews are read from `fixtures/previews/<slug>.json`.
 | 5. Write first email + 2 follow-ups (LLM), export `outbox/<date>.md` | `pnpm draft:emails 10` | done |
 | 6. Track manual sends and replies | `pnpm lead sent\|replied\|no\|won <email>` | done |
 | 7. Approve first emails for sending | `pnpm queue 5`, `pnpm queue list` | done |
-| 8. Send one due email per run (5 → 8 → 10/day, recipient's weekday 8am-5pm, stops on reply/bounce) | `pnpm send:due [--dry]`, scheduled by `.github/workflows/send-due.yml` | done |
+| 8. Send one due email per run (3 → 5 → 8 → 10/day, 45-120 min apart, recipient's weekday 8am-5pm, stops on reply/bounce) | `pnpm send:due [--dry]`, scheduled by `.github/workflows/send-due.yml` | done |
 
 GitHub Actions secrets needed for sending: `DATABASE_URL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (Gmail app password), `SENDER_NAME`.
 

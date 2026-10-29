@@ -32,14 +32,28 @@ if (recentBounces >= MAX_BOUNCES_PER_DAY) {
   process.exit(0);
 }
 
-// 3. Daily cap, ramping up from the first email ever sent: 5/day, then 8, then 10.
+// 3. Daily cap, ramping up slowly from the first email ever sent so Gmail sees a normal person:
+//    3/day in week 1, 5/day in week 2, 8/day in weeks 3-4, then 10. Follow-ups count toward the cap.
 const [{ first }] = await sql`select min(sent_at) as first from messages where status = 'sent'`;
 const days = first ? Math.floor((Date.now() - new Date(first).getTime()) / DAY) : 0;
-const cap = Math.min(days < 7 ? 5 : days < 14 ? 8 : 10, Number(process.env.MAX_PER_DAY ?? 10));
+const ramp = days < 7 ? 3 : days < 14 ? 5 : days < 28 ? 8 : 10;
+const cap = Math.min(ramp, Number(process.env.MAX_PER_DAY ?? 10));
 const [{ n: sentToday }] = await sql`select count(*)::int as n from messages where status = 'sent' and sent_at > now() - interval '1 day'`;
 if (sentToday >= cap) {
   console.log(`Daily cap reached (${sentToday}/${cap}).`);
   process.exit(0);
+}
+
+// Spread sends across the day: wait 45-120 minutes after the previous email. The wait is derived
+// from the last message id so it differs every time but stays stable between scheduled runs.
+const [last] = await sql`select id, sent_at from messages where status = 'sent' order by sent_at desc limit 1`;
+if (last) {
+  const gapMinutes = 45 + ((Number(last.id) * 37) % 76);
+  const waited = (Date.now() - new Date(last.sent_at).getTime()) / 60_000;
+  if (waited < gapMinutes) {
+    console.log(`Waiting: ${Math.ceil(gapMinutes - waited)} more minutes before the next email.`);
+    process.exit(0);
+  }
 }
 
 // 4. Next due message whose recipient is in business hours. Follow-ups go before new first emails.
