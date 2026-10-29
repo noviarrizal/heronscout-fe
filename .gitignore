@@ -47,3 +47,6 @@ fixtures/previews/*
 
 # Apify exports (real lead data)
 data/
+
+# Drafted emails (contain real lead emails)
+outbox/

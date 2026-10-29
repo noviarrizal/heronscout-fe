@@ -1,7 +1,9 @@
 // Import a Google Maps Scraper (compass/crawler-google-places) JSON export.
-// Usage: pnpm import:apify data/dallas-painters.json
+// Usage: pnpm import:apify data/dallas-painters.json [--city=Dallas]
+//   --city is used for businesses that hide their address on Google Maps.
 import { readFile } from "node:fs/promises";
 import { sql } from "./lib/db";
+import { countryFromLocation } from "./lib/geo";
 
 type ApifyPlace = {
   placeId?: string;
@@ -22,11 +24,13 @@ type ApifyPlace = {
   emails?: string[];
   instagrams?: string[];
   facebooks?: string[];
+  location?: { lat?: number; lng?: number } | null;
 };
 
-const file = process.argv[2];
+const file = process.argv.slice(2).find((a) => !a.startsWith("--"));
+const fallbackCity = process.argv.find((a) => a.startsWith("--city="))?.slice("--city=".length) ?? null;
 if (!file) {
-  console.error("Usage: pnpm import:apify <export.json>");
+  console.error("Usage: pnpm import:apify <export.json> [--city=Dallas]");
   process.exit(1);
 }
 
@@ -59,7 +63,7 @@ for (const p of places) {
     insert into leads (place_id, name, category, phone, website, address, city, country_code,
       rating, review_count, maps_url, image_urls, reviews, email, instagram, facebook, company_type, raw)
     values (${p.placeId}, ${p.title}, ${p.categoryName ?? null}, ${p.phone ?? null}, ${p.website ?? null},
-      ${p.address ?? null}, ${p.city ?? null}, ${p.countryCode ?? null}, ${p.totalScore ?? null},
+      ${p.address ?? null}, ${p.city ?? fallbackCity}, ${p.countryCode ?? countryFromLocation(p.location)}, ${p.totalScore ?? null},
       ${p.reviewsCount ?? null}, ${p.url ?? null}, ${JSON.stringify(p.imageUrls ?? [])},
       ${JSON.stringify(reviews)}, ${p.emails?.[0] ?? null}, ${p.instagrams?.[0] ?? null},
       ${p.facebooks?.[0] ?? null}, ${companyType}, ${JSON.stringify(p)})

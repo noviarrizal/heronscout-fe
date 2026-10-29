@@ -11,7 +11,10 @@
     "db:migrate": "tsx scripts/db-migrate.ts",
     "import:apify": "tsx scripts/import-apify.ts",
     "find:contacts": "tsx scripts/find-contacts.ts",
-    "build:previews": "tsx scripts/build-previews.ts"
+    "build:previews": "tsx scripts/build-previews.ts",
+    "draft:emails": "tsx scripts/draft-emails.ts",
+    "lead": "tsx scripts/lead.ts",
+    "fetch:apify": "tsx scripts/fetch-apify.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",

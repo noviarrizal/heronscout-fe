@@ -44,12 +44,13 @@ const radius: Record<Theme["radius"], string> = { none: "0px", sm: "8px", lg: "2
 
 // Paint-chip names for the swatch-fan hero. Decorative only, never presented as products.
 const swatchNames: Record<Theme["palette"], [string, string, string, string, string]> = {
-  forest: ["Spruce", "Moss", "Amber", "Fern", "Linen"],
-  cobalt: ["Harbour", "Cobalt", "Slate", "Mist", "Chalk"],
-  "slate-rust": ["Graphite", "Rust", "Pewter", "Clay", "Fog"],
-  "olive-brick": ["Olive", "Brick", "Sage", "Stone", "Oat"],
-  "navy-sun": ["Navy", "Sunflower", "Denim", "Haze", "Cloud"],
-  "mono-emerald": ["Ink", "Emerald", "Ash", "Pebble", "Paper"],
+  // Same order as the colours below: deep, deep tint, accent, accent tint, surface.
+  forest: ["Spruce", "Moss", "Amber", "Wheat", "Linen"],
+  cobalt: ["Harbour", "Slate", "Cobalt", "Mist", "Chalk"],
+  "slate-rust": ["Graphite", "Pewter", "Rust", "Clay", "Fog"],
+  "olive-brick": ["Olive", "Sage", "Brick", "Blush", "Oat"],
+  "navy-sun": ["Navy", "Denim", "Sunflower", "Butter", "Cloud"],
+  "mono-emerald": ["Ink", "Ash", "Emerald", "Mint", "Paper"],
 };
 
 function mix(a: string, b: string, t: number) {
