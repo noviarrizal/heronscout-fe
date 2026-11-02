@@ -1,4 +1,4 @@
-// Approve the next N first emails for automatic sending. Nothing is sent without being queued here.
+// Approve the next N first emails so they go out before anything send:due would pick by itself.
 // Usage: pnpm queue 5          queue the 5 leads with the most reviews
 //        pnpm queue list       show what's queued and due
 import { sql } from "./lib/db";

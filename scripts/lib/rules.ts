@@ -22,15 +22,22 @@ export function canEmail(lead: { country_code: string | null; company_type: stri
   }
 }
 
-// Search terms like "house painter" also return shops, art studios and franchise branches. Those either
-// aren't trades or already get a corporate site, so they're not worth a preview.
-const NOT_A_TRADE = /gallery|art studio|^artist|paint store|painting studio|supplier|home builder|store$/i;
-const FRANCHISE_PAGE = /\/(locations?|studio|franchise)\//i;
+// Search terms like "house painter" also return shops, art studios, museums and franchise branches. Those
+// either aren't trades or already get a corporate site, so they're not worth a preview. Fewer than
+// MIN_REVIEWS usually means a brand-new or dormant business.
+const NOT_A_TRADE = /gallery|art studio|^artist|paint store|painting studio|supplier|home builder|store$|museum|exhibit|interior designer/i;
+const NOT_A_TRADE_NAME = /\bhomes$|art league|museum/i;
+const FRANCHISE_PAGE = /\/(locations?|studio|franchise|service-areas)\//i;
+const FRANCHISE_BRAND =
+  /certapro|that ?1 ?painter|paint ?ez|five star painting|fresh coat|360 painting|wow 1 day|n-hance|mr\.? handyman|ace handyman|handyman connection|men in kilts|kitchen tune-up|sherwin|home depot/i;
+const MIN_REVIEWS = 5;
 
-export function isGoodFit(lead: { category: string | null; website: string | null }) {
+export function isGoodFit(lead: { name: string; category: string | null; website: string | null; review_count: number | null }) {
   if (lead.category && NOT_A_TRADE.test(lead.category)) return false;
+  if (NOT_A_TRADE_NAME.test(lead.name)) return false;
+  if (FRANCHISE_BRAND.test(lead.name) || (lead.website && FRANCHISE_BRAND.test(lead.website))) return false;
   if (lead.website && FRANCHISE_PAGE.test(lead.website)) return false;
-  return true;
+  return (lead.review_count ?? 0) >= MIN_REVIEWS;
 }
 
 // Recipient's local time decides when an email may go out (weekday business hours only).

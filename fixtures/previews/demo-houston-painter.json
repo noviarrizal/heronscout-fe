@@ -1,0 +1,69 @@
+{
+  "business": {
+    "name": "Bayou Line Painting",
+    "category": "House painter",
+    "city": "Houston",
+    "phone": "+1 713 555 0186",
+    "email": "hello@bayoulinepainting.com",
+    "rating": 4.9,
+    "reviewCount": 132
+  },
+  "theme": { "palette": "navy-sun", "type": "modern", "radius": "sm" },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "House painters in West Houston",
+      "headline": "Paint that holds up to Houston humidity",
+      "subheadline": "Interior and exterior painting in Katy, Memorial and the Heights. Mildew-resistant primers, clean lines, written quote in 48 hours.",
+      "ctaLabel": "Call for a quote"
+    },
+    {
+      "type": "trust",
+      "items": [
+        { "value": "4.9", "label": "Google rating" },
+        { "value": "132", "label": "Google reviews" },
+        { "value": "48 h", "label": "To a written quote" }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "bento",
+      "title": "What we paint",
+      "intro": "Homes, townhouses and small shops across West Houston.",
+      "items": [
+        { "name": "Exterior painting", "description": "Pressure washed, scraped, primed against mildew and finished in two coats.", "icon": "exterior" },
+        { "name": "Interior painting", "description": "Walls, ceilings and trim, with furniture moved and floors covered.", "icon": "interior" },
+        { "name": "Cabinet refinishing", "description": "Kitchen cabinets degreased, sanded and sprayed.", "icon": "cabinets" },
+        { "name": "Fence and deck staining", "description": "Cleaned and sealed to slow sun and rain damage.", "icon": "deck" }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How a job goes",
+      "body": "We walk the house with you, send a written quote within two days and agree a start date. Every evening the site is swept and the furniture goes back where it was."
+    },
+    {
+      "type": "reviews",
+      "variant": "wall",
+      "title": "What homeowners say",
+      "items": [
+        { "author": "Dana Whitfield", "rating": 5, "text": "Two summers on and the exterior still looks fresh. No peeling at all." },
+        { "author": "Luis Ortega", "rating": 5, "text": "On time every day and they cleaned up better than we do." },
+        { "author": "Hannah Cole", "rating": 5, "text": "Our cabinets look brand new and the quote was exactly what we paid." },
+        { "author": "Marcus Bell", "rating": 5, "text": "Clear quote, no surprises, great lines on the trim." }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": ["Katy", "Memorial", "The Heights", "Bellaire", "Spring Branch", "Cypress", "Sugar Land"]
+    },
+    {
+      "type": "cta",
+      "headline": "Tell us about the house",
+      "body": "Call or email and we'll come look, then send a written quote within 48 hours."
+    }
+  ]
+}

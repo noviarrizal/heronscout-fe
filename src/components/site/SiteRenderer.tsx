@@ -40,20 +40,22 @@ export function SiteRenderer({ spec }: { spec: SiteSpec }) {
       style={themeStyle(spec.theme)}
       className={`${themeClassName(spec.theme)} min-h-screen bg-[var(--c-bg)] pb-20 font-[family-name:var(--f-body)] text-[var(--c-ink)] antialiased selection:bg-[var(--c-accent)] selection:text-[var(--c-on-accent)] md:pb-0`}
     >
-      <div className="bg-[var(--c-ink)] px-4 py-2 text-center text-xs text-white/75">
+      <div data-preview-banner className="bg-[var(--c-ink)] px-4 py-2 text-center text-xs text-white/75">
         Free preview made for {spec.business.name.replace(/\.$/, "")}. Not a live website.
       </div>
       <Nav spec={spec} ctaLabel={ctaLabel} />
       <main>
+        {/* data-section lets `pnpm shorts` caption each section; `contents` keeps layout unchanged. */}
         {sections.map((section, i) => (
-          <SectionView
-            key={`${section.type}-${i}`}
-            section={section}
-            spec={spec}
-            ctaLabel={ctaLabel}
-            slots={slots}
-            swatches={paletteSwatches(spec.theme)}
-          />
+          <div key={`${section.type}-${i}`} data-section={section.type} className="contents">
+            <SectionView
+              section={section}
+              spec={spec}
+              ctaLabel={ctaLabel}
+              slots={slots}
+              swatches={paletteSwatches(spec.theme)}
+            />
+          </div>
         ))}
       </main>
       <Footer business={spec.business} />

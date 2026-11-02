@@ -18,7 +18,9 @@
     "send:due": "tsx scripts/send-due.ts",
     "queue": "tsx scripts/queue.ts",
     "scrape": "tsx scripts/scrape.ts",
-    "report": "tsx scripts/report.ts"
+    "report": "tsx scripts/report.ts",
+    "shorts": "tsx scripts/shorts.ts",
+    "prune:leads": "tsx scripts/prune.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",

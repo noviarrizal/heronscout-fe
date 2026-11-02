@@ -1,4 +1,4 @@
-// Email yourself what's waiting for approval, so the week's batch can be checked from a phone.
+// Email yourself the week's drafts, so the batch can be checked (and bad ones stopped) from a phone.
 // Usage: pnpm report
 import { sql } from "./lib/db";
 import { createTransport, fromAddress, requireMailConfig } from "./lib/mail";
@@ -25,18 +25,18 @@ const lines = waiting.map(
 const text = [
   `So far: ${sent} contacted, ${replied} replied, ${won} won.`,
   "",
-  `${waiting.length} first emails are drafted and waiting for approval, best leads first:`,
+  `${waiting.length} first emails are drafted. They go out automatically, best leads first, a few per weekday:`,
   "",
   ...lines,
   "",
-  "To approve the next ones: GitHub > Actions > Queue emails > Run workflow (or `pnpm queue 3`).",
-  "Nothing is sent until you queue it.",
+  "To keep one from going out: `pnpm lead no <email>`.",
+  "To pause all new first emails: GitHub > Settings > Secrets and variables > Actions > Variables, set AUTO_QUEUE to off.",
 ].join("\n");
 
 await createTransport().sendMail({
   from: fromAddress(),
   to: process.env.SMTP_USER,
-  subject: `HeronScout: ${waiting.length} emails waiting for approval`,
+  subject: `HeronScout: ${waiting.length} emails lined up this week`,
   text,
 });
 console.log(`Report sent: ${waiting.length} waiting.`);

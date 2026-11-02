@@ -1,11 +1,14 @@
 // Send at most ONE due email per run, so a 15-minute schedule spaces emails out naturally.
 // Before sending it reads the inbox: replies stop follow-ups, bounces block the address.
+// When nothing approved is due, it approves the best-fitting drafted first email itself (AUTO_QUEUE=off disables that,
+// so only emails approved with `pnpm queue` go out).
 // Usage: pnpm send:due [--dry]    --dry shows what would happen without sending or changing anything.
 import { sql } from "./lib/db";
 import { createTransport, fromAddress, requireMailConfig, scanInbox } from "./lib/mail";
-import { isBusinessHours, leadTimeZone } from "./lib/rules";
+import { canEmail, isBusinessHours, isGoodFit, leadTimeZone } from "./lib/rules";
 
 const dry = process.argv.includes("--dry");
+const autoQueue = process.env.AUTO_QUEUE?.toLowerCase() !== "off";
 const DAY = 24 * 3600 * 1000;
 const MAX_BOUNCES_PER_DAY = 2;
 requireMailConfig();
@@ -66,7 +69,26 @@ const due = await sql`
     and not exists (select 1 from suppression s where s.email = lower(l.email))
   order by m.step desc, m.send_at
 `;
-const next = due.find((m) => isBusinessHours(leadTimeZone(m as { city: string | null; country_code: string | null })));
+const inHours = (m: Record<string, unknown>) => isBusinessHours(leadTimeZone(m as { city: string | null; country_code: string | null }));
+let next = due.find(inHours);
+
+// 5. Nothing approved is due: take the best drafted first email whose recipient is in business hours.
+if (!next && autoQueue) {
+  const drafts = await sql`
+    select m.id, m.lead_id, m.step, m.subject, m.body, l.email, l.name, l.city, l.country_code,
+      l.category, l.website, l.review_count, l.company_type, null as thread_id
+    from messages m join leads l on l.id = m.lead_id
+    join previews p on p.lead_id = l.id and p.status <> 'expired'
+    where m.step = 1 and m.status = 'draft' and l.status = 'previewed'
+      and not exists (select 1 from suppression s where s.email = lower(l.email))
+    order by l.review_count desc nulls last
+  `;
+  next = drafts.find(
+    (m) => inHours(m) && canEmail(m as Parameters<typeof canEmail>[0]) && isGoodFit(m as Parameters<typeof isGoodFit>[0]),
+  );
+  if (next) console.log(`Auto-queued lead ${next.lead_id} (${drafts.length - 1} drafts left).`);
+}
+
 if (!next) {
   console.log(due.length ? `${due.length} due, none in business hours right now.` : "Nothing due.");
   process.exit(0);

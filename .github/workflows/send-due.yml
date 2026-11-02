@@ -2,6 +2,7 @@ name: Send due emails
 
 # Every 15 minutes during US business hours (13:00-23:59 UTC covers 8am-5pm Central and Arizona), weekdays.
 # Each run sends at most one email; send:due also checks the recipient's local time itself.
+# New first emails are picked automatically; set the repository variable AUTO_QUEUE=off to pause that.
 on:
   schedule:
     - cron: "*/15 13-23 * * 1-5"
@@ -31,3 +32,4 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           SENDER_NAME: ${{ secrets.SENDER_NAME }}
+          AUTO_QUEUE: ${{ vars.AUTO_QUEUE }}
