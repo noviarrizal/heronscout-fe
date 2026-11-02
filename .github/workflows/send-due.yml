@@ -1,7 +1,9 @@
 name: Send due emails
 
-# Every 15 minutes during US business hours (13:00-23:59 UTC covers 8am-5pm Central and Arizona), weekdays.
-# Each run sends at most one email; send:due also checks the recipient's local time itself.
+# GitHub runs scheduled workflows best-effort and skips most */15 triggers, so each run stays alive for up to
+# ~5.5 hours and calls send:due every 10 minutes. Any trigger that does fire covers the rest of the day; the
+# concurrency group keeps at most one waiting behind it. send:due enforces the daily cap, the 45-120 minute
+# gap and the recipient's business hours itself, so looping never sends more.
 # New first emails are picked automatically; set the repository variable AUTO_QUEUE=off to pause that.
 on:
   schedule:
@@ -15,7 +17,7 @@ concurrency:
 jobs:
   send:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -24,7 +26,15 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm send:due
+      - name: Send due emails until the window closes
+        run: |
+          end=$((SECONDS + 330 * 60))
+          while [ $SECONDS -lt $end ]; do
+            out=$(pnpm -s send:due 2>&1) || { echo "$out"; exit 1; }
+            echo "$(date -u +%H:%M) $out"
+            case "$out" in *"Daily cap reached"*|*"Stopped:"*) exit 0 ;; esac
+            sleep 600
+          done
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
