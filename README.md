@@ -33,6 +33,10 @@ Leads found by hand (e.g. a Facebook page with no website): write `fixtures/prev
 and puts the preview online for 30 days. The lead is kept out of the automatic emails; send the first
 one yourself and run `pnpm lead sent <email>`.
 
+`pnpm views` shows which emailed leads opened their preview, how often, for how long and how far they
+scrolled (a beacon on `/p/[slug]`, so link scanners that don't run JavaScript aren't counted). Open any
+preview once with `?me` on each of your own devices so your checks are left out.
+
 ## Automation
 
 | Workflow | When | What |

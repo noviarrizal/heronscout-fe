@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { SiteRenderer } from "@/components/site/SiteRenderer";
+import { ViewTracker } from "@/components/site/ViewTracker";
 import { getPreview } from "@/lib/previews";
 
 export default function PreviewPage({ params }: PageProps<"/p/[slug]">) {
@@ -15,5 +16,10 @@ async function Preview({ params }: Pick<PageProps<"/p/[slug]">, "params">) {
   const { slug } = await params;
   const spec = await getPreview(slug);
   if (!spec) notFound();
-  return <SiteRenderer spec={spec} />;
+  return (
+    <>
+      <SiteRenderer spec={spec} />
+      <ViewTracker slug={slug} />
+    </>
+  );
 }

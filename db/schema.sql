@@ -69,3 +69,16 @@ create table if not exists suppression (
   reason text,
   created_at timestamptz not null default now()
 );
+
+-- One row per real browser visit to a preview, sent by a beacon on the page, so link scanners that
+-- don't run JavaScript aren't counted. seconds and depth (furthest scroll, %) grow until the tab is left.
+create table if not exists preview_views (
+  id uuid primary key,
+  slug text not null references previews (slug) on delete cascade,
+  opened_at timestamptz not null default now(),
+  seconds integer not null default 0,
+  depth integer not null default 0,
+  user_agent text
+);
+
+create index if not exists preview_views_slug_idx on preview_views (slug);

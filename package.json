@@ -21,7 +21,8 @@
     "report": "tsx scripts/report.ts",
     "shorts": "tsx scripts/shorts.ts",
     "prune:leads": "tsx scripts/prune.ts",
-    "add:preview": "tsx scripts/add-preview.ts"
+    "add:preview": "tsx scripts/add-preview.ts",
+    "views": "tsx scripts/views.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
