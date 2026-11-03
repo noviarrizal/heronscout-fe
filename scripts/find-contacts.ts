@@ -1,12 +1,18 @@
 // Visit each lead's website (home + contact/about pages) and pull out email, Instagram and Facebook.
+// Leads without a website but with a strong Google rating get one Google search for an email they
+// published elsewhere (scripts/lib/search-email.ts); weaker ones are left without an email.
 // Usage: pnpm find:contacts          new leads only
 //        pnpm find:contacts --retry  also re-check leads that were checked before but have no email
 import { Resolver } from "node:dns/promises";
 import { sql } from "./lib/db";
+import { searchEmails } from "./lib/search-email";
 import { fetchHtml, fetchPage } from "./lib/web";
 
 const CONCURRENCY = 4;
 const MAX_EXTRA_PAGES = 3;
+// Without a website we only chase well-reviewed businesses: those are the ones a site pays off for.
+const NO_SITE_MIN_RATING = 4.5;
+const NO_SITE_MIN_REVIEWS = 10;
 const COMMON_CONTACT_PATHS = ["/contact", "/contact-us", "/about", "/about-us"];
 const retry = process.argv.includes("--retry");
 
@@ -100,9 +106,18 @@ async function scanSite(website: string) {
 }
 
 const leads = retry
-  ? await sql`select id, name, website, email from leads where status = 'new' or (status = 'contacts_checked' and email is null)`
-  : await sql`select id, name, website, email from leads where status = 'new'`;
+  ? await sql`select id, name, city, website, email, rating, review_count from leads where status = 'new' or (status = 'contacts_checked' and email is null)`
+  : await sql`select id, name, city, website, email, rating, review_count from leads where status = 'new'`;
 console.log(`Checking ${leads.length} leads...`);
+
+const strongNoSite = leads.filter(
+  (l) => !l.website && !l.email && Number(l.rating) >= NO_SITE_MIN_RATING && (l.review_count ?? 0) >= NO_SITE_MIN_REVIEWS,
+);
+const searched =
+  strongNoSite.length && process.env.APIFY_TOKEN
+    ? await searchEmails(strongNoSite.map((l) => ({ id: l.id, name: l.name, city: l.city })))
+    : new Map();
+if (strongNoSite.length) console.log(`Searched Google for ${strongNoSite.length} leads without a website.`);
 
 let withEmail = 0;
 const reasons = new Map<string, number>();
@@ -110,12 +125,12 @@ const queue = [...leads];
 await Promise.all(
   Array.from({ length: CONCURRENCY }, async () => {
     for (let lead = queue.shift(); lead; lead = queue.shift()) {
-      const found = lead.website ? await scanSite(lead.website) : null;
+      const found = lead.website ? await scanSite(lead.website) : searched.get(lead.id);
       const candidate = lead.email ?? found?.email ?? null;
       const deliverable = candidate ? await canReceiveMail(candidate) : false;
       const email = deliverable ? candidate : null;
-      const note = !lead.website
-        ? "no website"
+      const note = !lead.website && !candidate
+        ? searched.has(lead.id) ? "no website, no email on Google" : "no website, rating too low to chase"
         : candidate && !deliverable
           ? `${candidate} has no mail server`
           : (found?.note ?? "");
@@ -127,7 +142,7 @@ await Promise.all(
       await sql`
         update leads set
           email = ${email},
-          instagram = coalesce(instagram, ${found?.instagram ?? null}),
+          instagram = coalesce(instagram, ${(found && "instagram" in found ? found.instagram : null) ?? null}),
           facebook = coalesce(facebook, ${found?.facebook ?? null}),
           status = 'contacts_checked',
           updated_at = now()

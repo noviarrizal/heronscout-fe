@@ -28,6 +28,10 @@ Without `DATABASE_URL`, previews are read from `fixtures/previews/<slug>.json`.
 | 8. Optionally push specific first emails ahead of the automatic pick | `pnpm queue 5`, `pnpm queue list` | done |
 | 9. Send one due email per run (3 → 5 → 8 → 10/day, 45-120 min apart, recipient's weekday 8am-5pm, stops on reply/bounce); when nothing approved is due it picks the best drafted first email itself | `pnpm send:due [--dry]`, scheduled by `.github/workflows/send-due.yml` | done |
 
+Leads without a website come in too. `find:contacts` searches Google once for each one rated 4.5+ with
+10+ reviews (`"Name" City email`, ~$0.0045 each via Apify) and keeps an address only when the result
+names the business and the address carries a distinctive word of its name, so look-alikes are skipped.
+
 Leads found by hand (e.g. a Facebook page with no website): write `fixtures/previews/<slug>.json`
 (gitignored, like every real lead), then `pnpm add:preview <slug> --facebook <page url>` adds the lead
 and puts the preview online for 30 days. The lead is kept out of the automatic emails; send the first
@@ -41,7 +45,7 @@ preview once with `?me` on each of your own devices so your checks are left out.
 
 | Workflow | When | What |
 |---|---|---|
-| `weekly.yml` | Mondays 01:00 UTC, or by hand | `scrape` next 2 cities from `config/cities.json` → `find:contacts` → `build:previews` → `draft:emails` → `prune:leads` → `report` (emails you the week's drafts) |
+| `weekly.yml` | Mondays 01:00 UTC, or by hand | `scrape` the next 2 city + trade pairs (painters, plumbers, HVAC; with or without a website) → `find:contacts` → `build:previews` → `draft:emails` → `prune:leads` → `report` (emails you the week's drafts) |
 | `queue.yml` | By hand, optional | Approves the next N first emails ahead of the automatic pick |
 | `send-due.yml` | Every 15 min, US weekday hours | Sends one email if the cap and spacing allow. Set repository variable `AUTO_QUEUE=off` to only send queued ones |
 

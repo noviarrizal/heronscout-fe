@@ -22,14 +22,15 @@ export function canEmail(lead: { country_code: string | null; company_type: stri
   }
 }
 
-// Search terms like "house painter" also return shops, art studios, museums and franchise branches. Those
+// Search terms like "house painter" or "plumber" also return shops, art studios, museums and franchise branches. Those
 // either aren't trades or already get a corporate site, so they're not worth a preview. Fewer than
 // MIN_REVIEWS usually means a brand-new or dormant business.
-const NOT_A_TRADE = /gallery|art studio|^artist|paint store|painting studio|supplier|home builder|store$|museum|exhibit|interior designer/i;
+const NOT_A_TRADE =
+  /gallery|art studio|^artist|paint store|painting studio|supplier|supply|wholesale|home builder|store$|museum|exhibit|interior designer|plumbing school|trade school/i;
 const NOT_A_TRADE_NAME = /\bhomes$|art league|museum/i;
 const FRANCHISE_PAGE = /\/(locations?|studio|franchise|service-areas)\//i;
 const FRANCHISE_BRAND =
-  /certapro|that ?1 ?painter|paint ?ez|five star painting|fresh coat|360 painting|wow 1 day|n-hance|mr\.? handyman|ace handyman|handyman connection|men in kilts|kitchen tune-up|sherwin|home depot/i;
+  /certapro|that ?1 ?painter|paint ?ez|five star painting|fresh coat|360 painting|wow 1 day|n-hance|mr\.? handyman|ace handyman|handyman connection|men in kilts|kitchen tune-up|sherwin|home depot|roto-?rooter|mr\.? rooter|benjamin franklin plumbing|rescue rooter|\bars\b|one hour heating|aire serv|service experts|mister sparky|horizon services|baker brothers|abc home|len the plumber|lowe'?s|ferguson/i;
 const MIN_REVIEWS = 5;
 
 export function isGoodFit(lead: { name: string; category: string | null; website: string | null; review_count: number | null }) {
