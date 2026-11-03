@@ -1,0 +1,123 @@
+{
+  "business": {
+    "name": "Queen City Roofing",
+    "category": "Roofing contractor",
+    "city": "Charlotte",
+    "phone": "+1 704 555 0139",
+    "rating": 4.8,
+    "reviewCount": 181
+  },
+  "theme": {
+    "palette": "slate-rust",
+    "type": "sturdy",
+    "radius": "none"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Roofers in Charlotte",
+      "headline": "A roof you don't have to think about",
+      "subheadline": "Replacements, storm repairs and inspections across Charlotte, Matthews and Huntersville. Free inspection with photos of what we find.",
+      "ctaLabel": "Book an inspection",
+      "image": {
+        "url": "https://images.pexels.com/photos/36884223/pexels-photo-36884223.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Roofer carrying shingles across a roof"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "4.8",
+          "label": "Google rating"
+        },
+        {
+          "value": "181",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Free",
+          "label": "Photo inspections"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we do",
+      "intro": "Homes and small commercial buildings.",
+      "items": [
+        {
+          "name": "Roof replacement",
+          "description": "Old roof stripped, decking checked, new shingles installed.",
+          "icon": "roof"
+        },
+        {
+          "name": "Storm damage",
+          "description": "Leaks and missing shingles repaired, with photos for your insurer.",
+          "icon": "repair"
+        },
+        {
+          "name": "Gutters",
+          "description": "Seamless gutters and guards.",
+          "icon": "exterior"
+        },
+        {
+          "name": "Inspections",
+          "description": "A photo report of your roof's condition.",
+          "icon": "roof"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "withImage",
+      "title": "How we work",
+      "body": "We get on the roof, take photos and show you exactly what we found before we quote. No pressure, no surprise add-ons.",
+      "image": {
+        "url": "https://images.pexels.com/photos/29114658/pexels-photo-29114658.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Terracotta roof tiles against a blue sky"
+      }
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What homeowners say",
+      "items": [
+        {
+          "author": "Derek Mills",
+          "rating": 5,
+          "text": "Showed us photos of every problem before quoting. Honest crew."
+        },
+        {
+          "author": "Laura Kim",
+          "rating": 5,
+          "text": "New roof done in two days and the yard was spotless."
+        },
+        {
+          "author": "Andre Wallace",
+          "rating": 5,
+          "text": "Helped us through the insurance claim after the storm."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Charlotte",
+        "Matthews",
+        "Huntersville",
+        "Mint Hill",
+        "Concord",
+        "Pineville"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Worried about your roof?",
+      "body": "Book a free inspection and we'll send photos and a written quote."
+    }
+  ]
+}

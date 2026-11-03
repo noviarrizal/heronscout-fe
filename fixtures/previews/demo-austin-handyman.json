@@ -1,0 +1,123 @@
+{
+  "business": {
+    "name": "Two Hands Home Repair",
+    "category": "Handyman",
+    "city": "Austin",
+    "phone": "+1 512 555 0172",
+    "rating": 5,
+    "reviewCount": 88
+  },
+  "theme": {
+    "palette": "olive-brick",
+    "type": "grotesk",
+    "radius": "lg"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Handyman in Austin",
+      "headline": "Your to-do list, done in a day",
+      "subheadline": "Drywall, doors, shelves, TV mounts and small carpentry across Austin, Round Rock and Cedar Park. One visit for the whole list.",
+      "ctaLabel": "Call to book",
+      "image": {
+        "url": "https://images.pexels.com/photos/4792525/pexels-photo-4792525.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Handyman hammering a nail into a wall"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "5",
+          "label": "Google rating"
+        },
+        {
+          "value": "88",
+          "label": "Google reviews"
+        },
+        {
+          "value": "1 visit",
+          "label": "For the whole list"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "Jobs we take on",
+      "intro": "Bring the list, we'll work through it.",
+      "items": [
+        {
+          "name": "Drywall repair",
+          "description": "Holes and cracks patched, textured and painted.",
+          "icon": "repair"
+        },
+        {
+          "name": "Doors and hinges",
+          "description": "Sticking doors planed, hinges and handles replaced.",
+          "icon": "general"
+        },
+        {
+          "name": "Shelves and TV mounts",
+          "description": "Mounted level into studs, cables hidden.",
+          "icon": "interior"
+        },
+        {
+          "name": "Small carpentry",
+          "description": "Trim, baseboards and fence repairs.",
+          "icon": "deck"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "withImage",
+      "title": "How it works",
+      "body": "Send your list, we give you an estimate in hours, and we book a day. Everything on the list gets done before we pack up.",
+      "image": {
+        "url": "https://images.pexels.com/photos/5691518/pexels-photo-5691518.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Drill fixing a hinge to a door"
+      }
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What customers say",
+      "items": [
+        {
+          "author": "Nicole Barnes",
+          "rating": 5,
+          "text": "Knocked out eleven jobs in one afternoon."
+        },
+        {
+          "author": "Sam Patel",
+          "rating": 5,
+          "text": "TV mounted perfectly level and no cables showing."
+        },
+        {
+          "author": "Ruth Ellis",
+          "rating": 5,
+          "text": "On time, tidy and fair."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Austin",
+        "Round Rock",
+        "Cedar Park",
+        "Pflugerville",
+        "Georgetown",
+        "Lakeway"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Send us your list",
+      "body": "Call or text your list and a few photos, and we'll send an estimate today."
+    }
+  ]
+}

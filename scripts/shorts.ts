@@ -1,14 +1,17 @@
 // Turn a demo preview into a ~30 second vertical before/after video for YouTube Shorts, TikTok and Reels.
-// Usage: pnpm shorts <demo-slug> [--base http://localhost:3000] [--music track.mp3] [--keep-frames]
+// Usage: pnpm shorts <demo-slug> [--base http://localhost:3000] [--music track.mp3 | --silent] [--keep-frames]
 // Needs the site running (pnpm dev or pnpm start), Edge or Chrome, and ffmpeg on PATH (or FFMPEG_PATH).
-import { spawn } from "node:child_process";
+// Sound is generated (scripts/lib/shorts-audio.ts) unless --music replaces the bed or --silent drops it.
 import { existsSync } from "node:fs";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { sanitizeCopy, siteSpecSchema } from "../src/lib/spec";
 import { launchBrowser, sleep, type Page } from "./lib/cdp";
-import { beforePage, driverScript, hookPage, outroPage, shortCopy } from "./lib/shorts-pages";
+import { ffmpeg } from "./lib/ffmpeg";
+import { soundtrack, wav } from "./lib/shorts-audio";
+import { beforePage, driverScript, hookPage, outroPage, shortCopy, shortMeta } from "./lib/shorts-pages";
+import { checkShort } from "./lib/shorts-qa";
 
 // A 432x768 phone viewport at 2.5x gives 1080x1920 frames.
 const W = 432;
@@ -22,7 +25,6 @@ const FADES: [number, string][] = [
   [0.25, "fadewhite"],
   [0.4, "fade"],
 ];
-const ffmpegBin = process.env.FFMPEG_PATH ?? "ffmpeg";
 
 const args = process.argv.slice(2);
 const flag = (name: string) => {
@@ -32,6 +34,7 @@ const flag = (name: string) => {
 const slug = args.find((a, i) => !a.startsWith("--") && !args[i - 1]?.startsWith("--"));
 const base = (flag("--base") ?? process.env.SHORTS_BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const music = flag("--music");
+const silent = args.includes("--silent");
 const keepFrames = args.includes("--keep-frames");
 
 // Real leads' previews carry their names and Google photos, so only fictional demos become videos.
@@ -78,7 +81,7 @@ const writePage = async (name: string, html: string) => {
 };
 
 const { page, close } = await launchBrowser();
-let clips: string[] = [];
+let clips: Awaited<ReturnType<typeof record>>[] = [];
 try {
   await page.send("Page.enable");
   await page.send("Emulation.setDeviceMetricsOverride", { width: W, height: H, deviceScaleFactor: SCALE, mobile: true });
@@ -110,22 +113,23 @@ try {
 
 const durations = [SECONDS.hook, SECONDS.before, SECONDS.after, SECONDS.outro];
 const filters: string[] = [];
+// Where each clip starts in the final video: the next one begins as the cross-fade starts.
+const starts = [0];
 let length = durations[0];
 let prev = "[0:v]";
 FADES.forEach(([fade, kind], i) => {
   const label = `[v${i + 1}]`;
+  starts.push(length - fade);
   filters.push(`${prev}[${i + 1}:v]xfade=transition=${kind}:duration=${fade}:offset=${(length - fade).toFixed(3)}${label}`);
   length += durations[i + 1] - fade;
   prev = label;
 });
-const inputs = clips.flatMap((c) => ["-i", c]);
+const inputs = clips.flatMap((c) => ["-i", c.clip]);
 const audio: string[] = [];
-if (music) {
-  inputs.push("-i", music);
-  filters.push(
-    `[${clips.length}:a]atrim=0:${length.toFixed(3)},afade=t=in:d=0.4,afade=t=out:st=${(length - 1.5).toFixed(3)}:d=1.5[a]`,
-  );
-  audio.push("-map", "[a]", "-c:a", "aac", "-b:a", "192k");
+const sound = silent ? null : await makeSound();
+if (sound) {
+  inputs.push("-i", sound);
+  audio.push("-map", `${clips.length}:a`, "-c:a", "aac", "-b:a", "192k");
 }
 
 const output = path.join(outDir, `${slug}.mp4`);
@@ -154,14 +158,67 @@ await ffmpeg([
   "+faststart",
   output,
 ]);
+await writeFile(path.join(outDir, `${slug}.txt`), shortMeta(spec, copy));
 if (!keepFrames) await rm(work, { recursive: true, force: true });
-console.log(`Done: ${output} (${length.toFixed(1)}s${music ? ", with music" : ", no music: add it when uploading"})`);
+
+// Frame-by-frame check; the contact sheet and report go to out/shorts/qa/ for a quick look.
+const qaDir = path.join(outDir, "qa");
+await mkdir(qaDir, { recursive: true });
+const qa = await checkShort(output, {
+  fps: FPS,
+  planned: FADES.map(([fade], i) => [starts[i + 1], starts[i + 1] + fade]),
+  sheet: path.join(qaDir, `${slug}.jpg`),
+});
+await writeFile(path.join(qaDir, `${slug}.txt`), qa.report);
+console.log(`Done: ${output} + ${slug}.txt`);
+console.log(`Length ${length.toFixed(1)}s, ${silent ? "silent" : music ? "your music + effects" : "generated music + effects"}`);
+console.log(
+  qa.problems.length
+    ? `QA found problems (out/shorts/qa/${slug}.txt):\n- ${qa.problems.join("\n- ")}`
+    : "QA: no problems found",
+);
+
+// Music (generated, or --music) plus effects at the moments the pages logged, mastered to -15 LUFS.
+async function makeSound() {
+  const cues = clips.flatMap((c, i) => c.cues.map((cue) => ({ ...cue, t: starts[i] + cue.t })));
+  const sfx = path.join(work, "sound.wav");
+  const plan = {
+    length,
+    drop: starts[2] + FADES[1][0] / 2,
+    outro: starts[3],
+    whooshes: FADES.map(([fade], i) => ({ t: starts[i + 1] + fade / 2, size: i === 1 ? 1 : 0.5 })),
+    pops: cues.filter((c) => c.kind === "pop").map((c) => c.t),
+    chimes: cues.filter((c) => c.kind === "chime").map((c) => c.t),
+    music: !music,
+  };
+  await writeFile(sfx, wav(soundtrack(plan)));
+  let mix = sfx;
+  if (music) {
+    mix = path.join(work, "mix.wav");
+    const L = length.toFixed(3);
+    const bed = `[0:a]aformat=sample_rates=48000:channel_layouts=stereo,atrim=0:${L},afade=t=in:d=0.4,afade=t=out:st=${(length - 1.5).toFixed(3)}:d=1.5,volume=0.7[m]`;
+    await ffmpeg(["-y", "-i", music, "-i", sfx, "-filter_complex", `${bed};[m][1:a]amix=inputs=2:normalize=0[a]`, "-map", "[a]", "-t", L, mix]);
+  }
+  // Two passes: measure, then apply one fixed gain so the mix keeps its dynamics.
+  const target = "I=-15:TP=-1:LRA=20";
+  const { err } = await ffmpeg(["-i", mix, "-af", `loudnorm=${target}:print_format=json`, "-f", "null", "-"], "info");
+  const m = JSON.parse(err.slice(err.lastIndexOf("{"), err.lastIndexOf("}") + 1));
+  const measured = `measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}`;
+  const mastered = path.join(work, "master.wav");
+  await ffmpeg(["-y", "-i", mix, "-af", `loudnorm=${target}:${measured}:offset=${m.target_offset}:linear=true`, "-ar", "48000", mastered]);
+  return mastered;
+}
 
 // Screencast records real time, so motion on the page plays at its true speed. Frames arrive
 // only when something changes; each is held until the next one, then resampled to a steady FPS.
 async function record(page: Page, name: string, url: string, seconds: number, script?: string) {
   const dir = path.join(work, name);
   await mkdir(dir, { recursive: true });
+  // Load the page once first, so fonts and photos come from cache when the recording starts.
+  const warmed = page.once("Page.loadEventFired", 30_000).catch(() => {});
+  await page.send("Page.navigate", { url });
+  await warmed;
+  await sleep(1500);
   await page.send("Page.navigate", { url: "about:blank" });
   await sleep(300);
   const added = script ? await page.send("Page.addScriptToEvaluateOnNewDocument", { source: script }) : null;
@@ -188,12 +245,24 @@ async function record(page: Page, name: string, url: string, seconds: number, sc
   await page.send("Page.navigate", { url });
   await ready;
   t0 = performance.now() / 1000;
+  const t0Epoch = performance.timeOrigin + performance.now();
   await sleep(seconds * 1000);
+  // Sound cues the page logged (epoch ms), turned into seconds from the start of this clip.
+  const logged = await page.send("Runtime.evaluate", { expression: "JSON.stringify(window.__hsCues || [])", returnByValue: true });
+  const cues = (JSON.parse(logged.result.value) as { kind: string; t: number }[])
+    .map((c) => ({ kind: c.kind, t: (c.t - t0Epoch) / 1000 }))
+    .filter((c) => c.t >= 0 && c.t < seconds);
   await page.send("Page.stopScreencast");
   off();
   await Promise.all(writes);
   if (added) await page.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: added.identifier });
-  if (!frames.length) throw new Error(`No frames captured for ${name}.`);
+  // A page that never changes may send no screencast frame at all: fall back to one screenshot.
+  if (!frames.length) {
+    const shot = await page.send("Page.captureScreenshot", { format: "jpeg", quality: 92 });
+    const file = path.join(dir, "00000.jpg");
+    await writeFile(file, Buffer.from(shot.data, "base64"));
+    frames.push({ file, t: t0 });
+  }
 
   const end = t0 + seconds;
   const list = frames.map((f, i) => {
@@ -226,16 +295,6 @@ async function record(page: Page, name: string, url: string, seconds: number, sc
     "16",
     clip,
   ]);
-  console.log(`  ${frames.length} frames`);
-  return clip;
-}
-
-function ffmpeg(argv: string[]) {
-  return new Promise<void>((resolve, reject) => {
-    const proc = spawn(ffmpegBin, ["-hide_banner", "-loglevel", "error", ...argv], { stdio: ["ignore", "ignore", "pipe"] });
-    let err = "";
-    proc.stderr.on("data", (d) => (err += d));
-    proc.on("error", reject);
-    proc.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`ffmpeg failed: ${err.trim().slice(-800)}`))));
-  });
+  console.log(`  ${frames.length} frames, ${cues.length} sound cues`);
+  return { clip, cues };
 }

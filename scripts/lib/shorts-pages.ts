@@ -4,39 +4,72 @@ import type { Section, SiteSpec } from "../../src/lib/spec";
 
 export type ShortCopy = {
   kicker: string;
-  title: string;
-  subtitle: string;
+  // Big line on the first card. Must stay true for the "before" page, so no invented numbers.
+  hook: string;
+  subject: string;
   before: string;
   outroTitle: string;
   outroCta: string;
+  // Shown on the closing card and in the description: the businesses are fictional.
+  note: string;
+  hashtags: string[];
   labels: Partial<Record<Section["type"], string>>;
 };
 
-// Each caption describes what the new section does, so it stays true for any preview.
+// Each caption says why the section matters to a customer (the viewer can already see what it is),
+// so it stays true for any preview.
 const defaultLabels: ShortCopy["labels"] = {
-  hero: "Clear offer and a call button up top",
-  trust: "Google rating where people see it",
-  services: "Every service at a glance",
-  about: "How they work, in plain words",
-  reviews: "Real reviews on the page",
-  gallery: "Their own work, front and centre",
-  areas: "Every area they cover",
-  cta: "One tap to ask for a quote",
+  hero: "Callers find the number without hunting",
+  trust: "Proof they're good before anyone calls",
+  services: "Nobody has to guess what they do",
+  about: "People hire people they can picture",
+  reviews: "Past customers do the selling",
+  gallery: "Finished jobs say more than promises",
+  areas: "Locals can see they're covered",
+  cta: "Asking for a quote takes one tap",
 };
 
 // A fixture can override any line with a "short" object next to the spec.
 export function shortCopy(spec: SiteSpec, override: Partial<ShortCopy> = {}): ShortCopy {
   const { category, city } = spec.business;
+  const trade = `#${category.toLowerCase().replace(/&/g, "").replace(/[^a-z0-9]/g, "")}`;
   return {
-    kicker: "Website makeover",
-    title: `${category} in ${city}`,
-    subtitle: "Before and after",
+    kicker: "Concept makeover",
+    hook: "Looks fine on a laptop. Broken on phones.",
+    subject: `${category}, ${city}`,
     before: "Tiny text, no call button, not built for phones",
     outroTitle: "Same business. New website.",
-    outroCta: "Want one like this? Link in bio",
+    outroCta: "Comment your trade + city for a free preview",
+    note: "Concept for a fictional business",
+    hashtags: ["#shorts", "#webdesign", "#smallbusiness", trade, "#beforeandafter"],
     ...override,
     labels: { ...defaultLabels, ...override.labels },
   };
+}
+
+// Title, description and hashtags to paste into YouTube Shorts / TikTok / Reels.
+export function shortMeta(spec: SiteSpec, copy: ShortCopy) {
+  const { category, city } = spec.business;
+  const title = `${category} website makeover (concept), ${city}`;
+  const credit = JSON.stringify(spec.sections).includes("images.pexels.com") ? " Photos from Pexels." : "";
+  const description = [
+    `${copy.hook} A concept makeover for a fictional ${category.toLowerCase()} in ${city}: the "before" is a typical older small-business site, the "after" is built for phones, with a call button up top and the Google rating on show.`,
+    "",
+    "Run a trade business? Comment your trade + city and I'll build you a free preview of a new site.",
+    "",
+    `${copy.note}.${credit}`,
+    "",
+    copy.hashtags.join(" "),
+  ].join("\n");
+  return `TITLE
+${title}
+
+DESCRIPTION
+${description}
+
+PINNED COMMENT
+What's your trade and city? I'll pick a few and build free previews.
+`;
 }
 
 const esc = (s: string) =>
@@ -58,21 +91,31 @@ const cardCss = `
   .go .rise:nth-child(3){animation-delay:.32s}
   .go .rise:nth-child(4){animation-delay:.5s}
   @keyframes rise{to{opacity:1;transform:none}}
+  .creep{animation:creep 6s linear both}
+  @keyframes creep{to{transform:scale(1.05)}}
 `;
 
+// Logs when a sound should play (an element with data-cue starts animating, or a caption appears);
+// `pnpm shorts` reads window.__hsCues after recording and places the pops and chimes there.
+const cueHelper = `window.__hsCue=(kind)=>(window.__hsCues||(window.__hsCues=[])).push({kind,t:performance.timeOrigin+performance.now()});`;
+
 // Animations wait for the web fonts, so the first frames never show a fallback face.
-const startWhenFontsReady = `<script>document.fonts.ready.then(()=>document.body.classList.add("go"))</script>`;
+const startWhenFontsReady = `<script>${cueHelper}
+  addEventListener("animationstart",(e)=>e.target.dataset.cue&&e.animationName==="rise"&&__hsCue(e.target.dataset.cue));
+  document.fonts.ready.then(()=>document.body.classList.add("go"))</script>`;
 
 export function hookPage(copy: ShortCopy) {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${fonts}<style>${cardCss}
-    .split{display:flex;align-items:center;gap:12px;margin-top:30px;font-size:22px;font-weight:600}
+    h1{font-size:42px}
+    .subject{margin-top:26px;font-size:19px;font-weight:600;color:#4a4740}
+    .split{display:flex;align-items:center;gap:12px;margin-top:18px;font-size:22px;font-weight:600}
     .was{color:#8a857c;text-decoration:line-through;text-decoration-thickness:2px}
     .now{background:#151515;color:#f2f0ea;border-radius:999px;padding:8px 18px}
   </style></head><body>
-    <div>
+    <div class="creep">
       <p class="kicker rise">${esc(copy.kicker)}</p>
-      <h1 class="rise">${esc(copy.title)}</h1>
-      <div class="split rise"><span class="was">Before</span><span>&rarr;</span><span class="now">After</span></div>
+      <h1 class="rise" data-cue="pop">${esc(copy.hook)}</h1>
+      <div class="rise"><p class="subject">${esc(copy.subject)}</p><div class="split"><span class="was">Before</span><span>&rarr;</span><span class="now">After</span></div></div>
     </div>
     ${startWhenFontsReady}
   </body></html>`;
@@ -80,13 +123,15 @@ export function hookPage(copy: ShortCopy) {
 
 export function outroPage(copy: ShortCopy) {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${fonts}<style>${cardCss}
-    .cta{display:inline-block;margin-top:34px;background:#151515;color:#f2f0ea;border-radius:999px;padding:14px 22px;font-size:20px;font-weight:600}
+    .cta{display:inline-block;margin-top:34px;background:#151515;color:#f2f0ea;border-radius:18px;padding:14px 20px;font-size:20px;line-height:1.3;font-weight:600}
+    .note{position:fixed;left:34px;right:34px;bottom:40px;font-size:13px;color:#8a857c}
   </style></head><body>
-    <div>
+    <div class="creep">
       <p class="kicker rise">${esc(copy.kicker)}</p>
-      <h1 class="rise">${esc(copy.outroTitle)}</h1>
-      <p class="rise"><span class="cta">${esc(copy.outroCta)}</span></p>
+      <h1 class="rise" data-cue="pop">${esc(copy.outroTitle)}</h1>
+      <p class="rise" data-cue="chime"><span class="cta">${esc(copy.outroCta)}</span></p>
     </div>
+    <p class="note">${esc(copy.note)}</p>
     ${startWhenFontsReady}
   </body></html>`;
 }
@@ -116,7 +161,9 @@ export function beforePage(spec: SiteSpec) {
     body{margin:0;background:#b9c4d1}
     /* Clipped so the 980px site can't widen the phone viewport. */
     .frame{position:relative;width:100%;overflow:hidden}
-    .old-box{position:absolute;top:0;left:0}
+    /* A slow push-in, so the page never sits still before it scrolls. */
+    .old-box{position:absolute;top:0;left:0;transform-origin:50% 0;animation:creep 6s linear both}
+    @keyframes creep{to{transform:scale(1.1)}}
     .old{width:980px;transform-origin:0 0;font-family:Verdana,Arial,sans-serif;font-size:12px;color:#333;background:#b9c4d1;padding:14px 0 40px}
     .old #wrap{width:900px;margin:0 auto;background:#fff;border:1px solid #8796a8}
     .old #head{background:linear-gradient(#3c6fbd,#1d3f7a);color:#fff;padding:22px 24px;font:bold 34px "Times New Roman",serif}
@@ -183,7 +230,9 @@ export function driverScript(opts: {
 }) {
   return `(() => {
   const OPTS = ${JSON.stringify(opts)};
-  const START = 1300, HOLD = 900;
+  // Short still moments at both ends: a picture that sits still reads as a freeze on Shorts.
+  const START = 600, HOLD = 0;
+  ${cueHelper}
   const css = \`
     nextjs-portal,[data-preview-banner]{display:none!important}
     html{scroll-behavior:auto!important}
@@ -205,7 +254,7 @@ export function driverScript(opts: {
       if (value === current) return;
       current = value;
       text.classList.remove("on");
-      setTimeout(() => { if (current !== value) return; text.textContent = value; if (value) text.classList.add("on"); }, 200);
+      setTimeout(() => { if (current !== value) return; text.textContent = value; if (value) { text.classList.add("on"); __hsCue("pop"); } }, 200);
     };
     // The caption follows whichever section's top has passed the middle of the screen.
     const label = () => {
@@ -224,7 +273,8 @@ export function driverScript(opts: {
         const max = document.documentElement.scrollHeight - innerHeight;
         const dur = Math.max(1000, OPTS.durationMs - START - HOLD);
         const t0 = performance.now();
-        const ease = (t) => 0.5 - Math.cos(Math.PI * t) / 2;
+        // Mostly eased, partly linear, so the last second still moves instead of crawling to a stop.
+        const ease = (t) => 0.7 * (0.5 - Math.cos(Math.PI * t) / 2) + 0.3 * t;
         const step = (now) => {
           const p = Math.min(1, (now - t0) / dur);
           scrollTo(0, max * ease(p));

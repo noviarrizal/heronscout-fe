@@ -27,6 +27,12 @@ export function SiteRenderer({ spec }: { spec: SiteSpec }) {
   // One label for the one action (call) everywhere on the page.
   const ctaLabel = hero?.type === "hero" ? hero.ctaLabel : "Call now";
   const slots = photoSlots(spec);
+  const services = spec.sections.find((s) => s.type === "services");
+  const painter = /paint|decorat/i.test(spec.business.category);
+  const swatches = paletteSwatches(
+    spec.theme,
+    painter || services?.type !== "services" ? undefined : services.items,
+  );
 
   // Reviews are quoted verbatim; only the first letter is capitalised for display.
   const sections = spec.sections.map((s): Section =>
@@ -53,7 +59,7 @@ export function SiteRenderer({ spec }: { spec: SiteSpec }) {
               spec={spec}
               ctaLabel={ctaLabel}
               slots={slots}
-              swatches={paletteSwatches(spec.theme)}
+              swatches={swatches}
             />
           </div>
         ))}

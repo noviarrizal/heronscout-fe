@@ -28,6 +28,11 @@ Without `DATABASE_URL`, previews are read from `fixtures/previews/<slug>.json`.
 | 8. Optionally push specific first emails ahead of the automatic pick | `pnpm queue 5`, `pnpm queue list` | done |
 | 9. Send one due email per run (3 → 5 → 8 → 10/day, 45-120 min apart, recipient's weekday 8am-5pm, stops on reply/bounce); when nothing approved is due it picks the best drafted first email itself | `pnpm send:due [--dry]`, scheduled by `.github/workflows/send-due.yml` | done |
 
+Leads found by hand (e.g. a Facebook page with no website): write `fixtures/previews/<slug>.json`
+(gitignored, like every real lead), then `pnpm add:preview <slug> --facebook <page url>` adds the lead
+and puts the preview online for 30 days. The lead is kept out of the automatic emails; send the first
+one yourself and run `pnpm lead sent <email>`.
+
 ## Automation
 
 | Workflow | When | What |
@@ -44,9 +49,17 @@ Reply templates and the offer: `docs/reply-templates.md`.
 
 ## Shorts
 
-`pnpm shorts <demo-slug> [--music track.mp3]` records a ~29 s vertical before/after video
+`pnpm shorts <demo-slug> [--music track.mp3 | --silent]` records a ~29 s vertical before/after video
 (1080x1920) to `out/shorts/<slug>.mp4`: hook card, a dated "before" site, the preview scrolling
-with a caption per section, closing card. Run `pnpm dev` first (or pass `--base <url>`); needs
+with a caption per section, closing card ("Comment your trade + city for a free preview").
+`out/shorts/<slug>.txt` holds the title, description, hashtags and pinned comment to paste.
+
+Sound is generated in `scripts/lib/shorts-audio.ts`: an original music bed that opens up with the beat
+when the new site appears, a whoosh per cut, a pop per caption and a chime on the closing card, mastered
+to -15 LUFS. It is ours, so the video can go on YouTube, Facebook and TikTok as is. `--music` swaps the
+bed for your own track (the effects stay). Each render ends with a frame-by-frame check (black, white,
+frozen or jumpy frames, loudness); the report and a contact sheet land in `out/shorts/qa/`.
+Every video says it is a concept for a fictional business; hooks never quote invented numbers. Run `pnpm dev` first (or pass `--base <url>`); needs
 Edge or Chrome and ffmpeg (`FFMPEG_PATH` if not on PATH).
 
 Only `fixtures/previews/demo-*.json` work: those are fictional businesses. Real leads' previews

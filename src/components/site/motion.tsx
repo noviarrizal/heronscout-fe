@@ -13,6 +13,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
+import { serviceIcon } from "./icons";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -88,7 +89,9 @@ export function ParallaxImage({ src, alt, className = "" }: { src: string; alt: 
   );
 }
 
-export type Swatch = { name: string; color: string; ink: string };
+// Painters' fans show paint chips (`code` is the hex); other trades get service cards with an icon
+// (`icon`, a serviceIcon key) drawn in `fg` so it reads on the card colour.
+export type Swatch = { name: string; color: string; ink: string; code?: string; icon?: string; fg?: string };
 
 // Painter-specific hero visual: a fan of paint chips that opens on load and lifts on hover.
 export function SwatchFan({ swatches }: { swatches: Swatch[] }) {
@@ -108,15 +111,21 @@ export function SwatchFan({ swatches }: { swatches: Swatch[] }) {
             whileHover={reduce ? undefined : { y: -18, rotateX: 6, transition: { type: "spring", stiffness: 260, damping: 22 } }}
             transition={{ duration: 1.1, delay: 0.25 + i * 0.07, ease }}
           >
+            {s.icon && <CardIcon icon={s.icon} color={s.fg} />}
             <div className="absolute inset-x-0 bottom-0 rounded-b-[var(--r)] bg-[var(--c-bg)] px-4 py-3">
               <p className="text-sm font-semibold text-[var(--c-ink)]">{s.name}</p>
-              <p className="font-mono text-xs uppercase text-[var(--c-muted)]">{s.color}</p>
+              {s.code && <p className="font-mono text-xs uppercase text-[var(--c-muted)]">{s.code}</p>}
             </div>
           </motion.div>
         );
       })}
     </div>
   );
+}
+
+function CardIcon({ icon, color }: { icon: string; color?: string }) {
+  const Glyph = serviceIcon[icon] ?? serviceIcon.general;
+  return <Glyph weight="light" style={{ color }} className="absolute top-[40%] left-1/2 size-20 -translate-x-1/2 -translate-y-1/2" />;
 }
 
 // Big figures count up once, so the eye lands on them.
@@ -150,10 +159,10 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
   );
 }
 
-type Quote = { author: string; text: string; rating: number };
+type Quote = { author: string; text: string; rating?: number };
 
 // One review at a time, large, auto-advancing; pauses while hovered.
-export function ReviewCarousel({ items, starColor }: { items: Quote[]; starColor: string }) {
+export function ReviewCarousel({ items, source, starColor }: { items: Quote[]; source: string; starColor: string }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
@@ -176,13 +185,15 @@ export function ReviewCarousel({ items, starColor }: { items: Quote[]; starColor
             exit={reduce ? undefined : { opacity: 0, y: -12 }}
             transition={{ duration: 0.5, ease }}
           >
-            <p aria-label={`${item.rating} out of 5 stars`} style={{ color: starColor }} className="text-lg tracking-[0.2em]">
-              {"★".repeat(Math.round(item.rating))}
-            </p>
-            <blockquote className="mt-5 line-clamp-4 font-[family-name:var(--f-heading)] text-2xl leading-snug font-semibold tracking-tight text-balance md:text-4xl">
+            {item.rating && (
+              <p aria-label={`${item.rating} out of 5 stars`} style={{ color: starColor }} className="mb-5 text-lg tracking-[0.2em]">
+                {"★".repeat(Math.round(item.rating))}
+              </p>
+            )}
+            <blockquote className="line-clamp-4 font-[family-name:var(--f-heading)] text-2xl leading-snug font-semibold tracking-tight text-balance md:text-4xl">
               &ldquo;{item.text}&rdquo;
             </blockquote>
-            <figcaption className="mt-6 text-[var(--c-muted)]">{item.author}, Google review</figcaption>
+            <figcaption className="mt-6 text-[var(--c-muted)]">{item.author}, {source} review</figcaption>
           </motion.figure>
         </AnimatePresence>
       </div>

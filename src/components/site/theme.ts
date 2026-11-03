@@ -59,12 +59,27 @@ function mix(a: string, b: string, t: number) {
   return `#${pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, "0")).join("")}`;
 }
 
-export function paletteSwatches(theme: Theme) {
+// Painters get named paint chips; any other trade gets one card per service (first service on top),
+// since colour chips only make sense for paint.
+const light = (hex: string) => {
+  const [r, g, b] = hex.match(/\w\w/g)!.map((h) => parseInt(h, 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.55;
+};
+
+export function paletteSwatches(theme: Theme, services?: { name: string; icon?: string }[]) {
   const p = palettes[theme.palette];
   const names = swatchNames[theme.palette];
   const colors = [p.deep, mix(p.deep, p.bg, 0.35), p.accent, mix(p.accent, p.bg, 0.55), p.surface];
   // Back to front: light chips behind, the brand accent on top of the fan.
-  return [4, 3, 1, 0, 2].map((i) => ({ name: names[i], color: colors[i].toUpperCase(), ink: p.ink }));
+  const order = [4, 3, 1, 0, 2];
+  if (services?.length) {
+    const top = services.slice(0, 5);
+    return order.slice(5 - top.length).map((i, k) => {
+      const service = top[top.length - 1 - k];
+      return { name: service.name, icon: service.icon ?? "general", color: colors[i], ink: p.ink, fg: light(colors[i]) ? p.ink : "#ffffff" };
+    });
+  }
+  return order.map((i) => ({ name: names[i], color: colors[i].toUpperCase(), ink: p.ink, code: colors[i].toUpperCase() }));
 }
 
 export function themeClassName(theme: Theme) {

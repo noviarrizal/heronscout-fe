@@ -1,21 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- lead photos come from arbitrary hosts */
-import {
-  ArrowUpRightIcon,
-  BuildingsIcon,
-  EnvelopeSimpleIcon,
-  HouseIcon,
-  HouseLineIcon,
-  PaintBrushIcon,
-  PaintRollerIcon,
-  PhoneIcon,
-  SprayBottleIcon,
-  SquaresFourIcon,
-  TreeIcon,
-  WallIcon,
-  WrenchIcon,
-} from "@phosphor-icons/react/ssr";
-import type { Icon } from "@phosphor-icons/react";
+import { ArrowUpRightIcon, EnvelopeSimpleIcon, HammerIcon, PhoneIcon } from "@phosphor-icons/react/ssr";
 import type { Section, SiteSpec } from "@/lib/spec";
+import { serviceIcon } from "./icons";
 import { CountUp, HeroStagger, ParallaxImage, Reveal, ReviewCarousel, ScrollNav, SwatchFan, type Swatch } from "./motion";
 
 type Spec = SiteSpec;
@@ -32,18 +18,7 @@ const button =
 // A weak review count reads as a weakness, not social proof.
 const MIN_REVIEWS_TO_SHOW = 5;
 
-const serviceIcon: Record<string, Icon> = {
-  interior: PaintRollerIcon,
-  exterior: HouseLineIcon,
-  cabinets: SquaresFourIcon,
-  wallpaper: WallIcon,
-  repair: WrenchIcon,
-  commercial: BuildingsIcon,
-  deck: TreeIcon,
-  roof: HouseIcon,
-  spray: SprayBottleIcon,
-  general: PaintBrushIcon,
-};
+
 
 function telHref(phone?: string) {
   return phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "#contact";
@@ -194,7 +169,7 @@ function Services({ s }: { s: Of<"services"> }) {
         </Reveal>
         <div role="list" className="md:col-span-8">
           {s.items.map((item, i) => {
-            const IconComponent = serviceIcon[item.icon ?? "general"] ?? PaintBrushIcon;
+            const IconComponent = serviceIcon[item.icon ?? "general"] ?? HammerIcon;
             return (
               <Reveal key={item.name} delay={i * 0.05}>
                 <div role="listitem" className="group grid grid-cols-[auto_1fr_auto] items-start gap-5 border-t border-[var(--c-ink)]/12 py-8 transition-colors duration-300 last:border-b md:gap-8 md:py-10">
@@ -257,7 +232,7 @@ function Reviews({ s, business }: { s: Of<"reviews">; business: Business }) {
           )}
         </Reveal>
         <Reveal delay={0.1} className="md:col-span-8">
-          <ReviewCarousel items={s.items} starColor="var(--c-accent)" />
+          <ReviewCarousel items={s.items} source={s.source ?? "Google"} starColor="var(--c-accent)" />
         </Reveal>
       </div>
     </section>

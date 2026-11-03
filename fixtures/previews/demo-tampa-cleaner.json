@@ -1,0 +1,119 @@
+{
+  "business": {
+    "name": "Sunbright Home Cleaning",
+    "category": "House cleaner",
+    "city": "Tampa",
+    "phone": "+1 813 555 0127",
+    "rating": 4.9,
+    "reviewCount": 214
+  },
+  "theme": {
+    "palette": "mono-emerald",
+    "type": "clean",
+    "radius": "lg"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "House cleaning in South Tampa",
+      "headline": "Come home to a clean house",
+      "subheadline": "Weekly, fortnightly and move-out cleans across South Tampa, Westshore and Seminole Heights. Same cleaner every visit, supplies included.",
+      "ctaLabel": "Call for a price",
+      "image": {
+        "url": "https://images.pexels.com/photos/10566507/pexels-photo-10566507.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Cleaning spray bottles on a shelf"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "4.9",
+          "label": "Google rating"
+        },
+        {
+          "value": "214",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Same day",
+          "label": "Price by text"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we clean",
+      "intro": "Houses, apartments and short-term rentals.",
+      "items": [
+        {
+          "name": "Regular cleaning",
+          "description": "Kitchen, bathrooms, floors and dusting, every week or two.",
+          "icon": "general"
+        },
+        {
+          "name": "Deep clean",
+          "description": "Inside the oven and fridge, baseboards, blinds and grout.",
+          "icon": "general"
+        },
+        {
+          "name": "Move-in and move-out",
+          "description": "Empty-home cleans that help get the deposit back.",
+          "icon": "general"
+        },
+        {
+          "name": "Rental turnovers",
+          "description": "Fresh linen and a reset between guests.",
+          "icon": "general"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How we work",
+      "body": "The same cleaner comes every visit and follows a checklist you can change any time. If something gets missed, tell us within a day and we come back to fix it."
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What clients say",
+      "items": [
+        {
+          "author": "Alicia Moreno",
+          "rating": 5,
+          "text": "Same lady every week and the house smells amazing when we get home."
+        },
+        {
+          "author": "Grant Fowler",
+          "rating": 5,
+          "text": "Booked a move-out clean and got our full deposit back."
+        },
+        {
+          "author": "Tasha Greene",
+          "rating": 5,
+          "text": "Reliable, friendly and they never rush."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "South Tampa",
+        "Westshore",
+        "Seminole Heights",
+        "Hyde Park",
+        "Davis Islands",
+        "Brandon"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Get a price for your home",
+      "body": "Call or text with the number of bedrooms and bathrooms and we'll send a price the same day."
+    }
+  ]
+}

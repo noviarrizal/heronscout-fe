@@ -1,0 +1,119 @@
+{
+  "business": {
+    "name": "Saguaro Lock & Key",
+    "category": "Locksmith",
+    "city": "Phoenix",
+    "phone": "+1 602 555 0193",
+    "rating": 4.9,
+    "reviewCount": 126
+  },
+  "theme": {
+    "palette": "cobalt",
+    "type": "grotesk",
+    "radius": "sm"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Locksmith in Phoenix",
+      "headline": "Locked out? We'll be there fast.",
+      "subheadline": "Lockouts, lock changes, rekeying and smart locks across Phoenix, Scottsdale and Tempe. Price quoted on the phone before we drive out.",
+      "ctaLabel": "Call a locksmith",
+      "image": {
+        "url": "https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Close-up of a door lock and handle"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "4.9",
+          "label": "Google rating"
+        },
+        {
+          "value": "126",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Phone",
+          "label": "Price before we drive"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we do",
+      "intro": "Homes, cars and small businesses.",
+      "items": [
+        {
+          "name": "Lockouts",
+          "description": "Home and car lockouts opened without damage where possible.",
+          "icon": "general"
+        },
+        {
+          "name": "Lock changes",
+          "description": "New locks fitted after a move or a lost key.",
+          "icon": "general"
+        },
+        {
+          "name": "Rekeying",
+          "description": "Old keys stop working, new keys for every door.",
+          "icon": "repair"
+        },
+        {
+          "name": "Smart locks",
+          "description": "Keypad and app locks installed and set up.",
+          "icon": "general"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How we work",
+      "body": "We quote on the phone before we drive out, and that's the price you pay. Every technician carries ID and a marked van."
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What customers say",
+      "items": [
+        {
+          "author": "Maria Lopez",
+          "rating": 5,
+          "text": "Locked out at 11pm and they were there in twenty minutes."
+        },
+        {
+          "author": "Kevin Ross",
+          "rating": 5,
+          "text": "Rekeyed the whole house the day we moved in."
+        },
+        {
+          "author": "Jade Turner",
+          "rating": 5,
+          "text": "Price on the phone matched the bill exactly."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Phoenix",
+        "Scottsdale",
+        "Tempe",
+        "Mesa",
+        "Chandler",
+        "Glendale"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Need a locksmith now?",
+      "body": "Call and we'll give you a price and an arrival time."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "business": {
+    "name": "Front Range Electric",
+    "category": "Electrician",
+    "city": "Denver",
+    "phone": "+1 303 555 0164",
+    "rating": 4.8,
+    "reviewCount": 97
+  },
+  "theme": {
+    "palette": "navy-sun",
+    "type": "modern",
+    "radius": "sm"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Licensed electricians in Denver",
+      "headline": "Wiring done right the first time",
+      "subheadline": "Panel upgrades, EV chargers, lighting and fault finding across Denver, Lakewood and Aurora. Upfront pricing before any work starts.",
+      "ctaLabel": "Call an electrician",
+      "image": {
+        "url": "https://images.pexels.com/photos/33694016/pexels-photo-33694016.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Electrician testing wires in a panel"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "4.8",
+          "label": "Google rating"
+        },
+        {
+          "value": "97",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Upfront",
+          "label": "Pricing"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we do",
+      "intro": "Homes and small businesses.",
+      "items": [
+        {
+          "name": "Panel upgrades",
+          "description": "Old fuse boxes and full panels replaced and brought up to code.",
+          "icon": "general"
+        },
+        {
+          "name": "EV chargers",
+          "description": "Level 2 chargers installed, permitted and inspected.",
+          "icon": "general"
+        },
+        {
+          "name": "Lighting",
+          "description": "Recessed, under-cabinet and outdoor lighting.",
+          "icon": "interior"
+        },
+        {
+          "name": "Fault finding",
+          "description": "Tripping breakers and dead outlets traced and fixed.",
+          "icon": "repair"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How we work",
+      "body": "You get a price before we start, not after. We pull the permits, book the inspection and leave the place as clean as we found it."
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What customers say",
+      "items": [
+        {
+          "author": "Jenna Price",
+          "rating": 5,
+          "text": "Explained everything, quoted upfront and finished early."
+        },
+        {
+          "author": "Omar Haddad",
+          "rating": 5,
+          "text": "EV charger in and inspected within a week."
+        },
+        {
+          "author": "Beth Nolan",
+          "rating": 5,
+          "text": "Found a fault two other companies missed."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Denver",
+        "Lakewood",
+        "Aurora",
+        "Englewood",
+        "Arvada",
+        "Littleton"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Need an electrician?",
+      "body": "Call and tell us what's going on. We'll give you a price before we start."
+    }
+  ]
+}

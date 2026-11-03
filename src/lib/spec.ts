@@ -31,7 +31,10 @@ const trustSection = z.object({
   items: z.array(z.object({ value: z.string(), label: z.string() })).min(2).max(4),
 });
 
-export const serviceIcons = ["interior", "exterior", "cabinets", "wallpaper", "repair", "commercial", "deck", "roof", "spray", "general"] as const;
+export const serviceIcons = [
+  "interior", "exterior", "cabinets", "wallpaper", "repair", "commercial", "deck", "roof", "spray",
+  "plumbing", "hvac", "heating", "electrical", "lawn", "lock", "general",
+] as const;
 
 const servicesSection = z.object({
   type: z.literal("services"),
@@ -58,8 +61,10 @@ const reviewsSection = z.object({
   type: z.literal("reviews"),
   variant: z.enum(["spotlight", "wall"]),
   title: z.string(),
+  // Facebook recommendations carry no stars, so rating is optional there; stars only show when it's set.
+  source: z.enum(["Google", "Facebook"]).optional(),
   items: z
-    .array(z.object({ author: z.string(), text: z.string(), rating: z.number().min(1).max(5) }))
+    .array(z.object({ author: z.string(), text: z.string(), rating: z.number().min(1).max(5).optional() }))
     .min(1)
     .max(6),
 });

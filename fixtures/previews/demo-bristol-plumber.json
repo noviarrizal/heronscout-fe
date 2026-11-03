@@ -1,0 +1,123 @@
+{
+  "business": {
+    "name": "Harbourside Plumbing & Heating",
+    "category": "Plumber",
+    "city": "Bristol",
+    "phone": "+44 7700 900318",
+    "rating": 4.9,
+    "reviewCount": 152
+  },
+  "theme": {
+    "palette": "cobalt",
+    "type": "clean",
+    "radius": "lg"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Plumbing and heating in Bristol",
+      "headline": "Leaks fixed. Boilers sorted.",
+      "subheadline": "Gas Safe engineers covering Clifton, Bedminster and Southville. Same-day call-outs for leaks and no heating.",
+      "ctaLabel": "Call a plumber",
+      "image": {
+        "url": "https://images.pexels.com/photos/33388390/pexels-photo-33388390.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Plumber working on pipework"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "4.9",
+          "label": "Google rating"
+        },
+        {
+          "value": "152",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Same day",
+          "label": "Call-outs"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "photo",
+      "title": "What we fix",
+      "intro": "Homes and landlords across Bristol.",
+      "image": {
+        "url": "https://images.pexels.com/photos/8488035/pexels-photo-8488035.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Old pipework on a wall"
+      },
+      "items": [
+        {
+          "name": "Boiler servicing",
+          "description": "Annual service and safety check, with a certificate for landlords.",
+          "icon": "general"
+        },
+        {
+          "name": "Leaks and burst pipes",
+          "description": "Found, fixed and made good.",
+          "icon": "repair"
+        },
+        {
+          "name": "Bathroom fitting",
+          "description": "Showers, baths and basins plumbed in.",
+          "icon": "interior"
+        },
+        {
+          "name": "Radiators",
+          "description": "New radiators, valves and power flushing.",
+          "icon": "general"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "plain",
+      "title": "How we work",
+      "body": "We tell you the call-out price on the phone, explain the fix before we do it, and tidy up after ourselves."
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What customers say",
+      "items": [
+        {
+          "author": "Hannah Webb",
+          "rating": 5,
+          "text": "Came out the same afternoon for a leak and sorted it in an hour."
+        },
+        {
+          "author": "Tom Reilly",
+          "rating": 5,
+          "text": "Fair price, clear explanation, no mess."
+        },
+        {
+          "author": "Grace Oduya",
+          "rating": 5,
+          "text": "Our boiler has never run better."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Clifton",
+        "Bedminster",
+        "Southville",
+        "Redland",
+        "Bishopston",
+        "Totterdown"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Got a leak or no heating?",
+      "body": "Call now and we'll tell you when we can be there."
+    }
+  ]
+}

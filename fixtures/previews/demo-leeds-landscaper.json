@@ -1,0 +1,123 @@
+{
+  "business": {
+    "name": "Kirkstall Gardens & Landscaping",
+    "category": "Landscaper",
+    "city": "Leeds",
+    "phone": "+44 7700 900456",
+    "rating": 5,
+    "reviewCount": 63
+  },
+  "theme": {
+    "palette": "forest",
+    "type": "sturdy",
+    "radius": "sm"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "variant": "split",
+      "eyebrow": "Garden landscaping in North Leeds",
+      "headline": "Gardens you'll actually use",
+      "subheadline": "Patios, paths, fencing and planting across Headingley, Horsforth and Roundhay. Free design visit and a fixed written quote.",
+      "ctaLabel": "Book a visit",
+      "image": {
+        "url": "https://images.pexels.com/photos/33162373/pexels-photo-33162373.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Clipped hedges and trees in a landscaped garden"
+      }
+    },
+    {
+      "type": "trust",
+      "items": [
+        {
+          "value": "5",
+          "label": "Google rating"
+        },
+        {
+          "value": "63",
+          "label": "Google reviews"
+        },
+        {
+          "value": "Fixed",
+          "label": "Written quotes"
+        }
+      ]
+    },
+    {
+      "type": "services",
+      "variant": "columns",
+      "title": "What we build",
+      "intro": "From a tidy-up to a full redesign.",
+      "items": [
+        {
+          "name": "Garden design",
+          "description": "A drawn plan with planting, levels and lighting before any digging starts.",
+          "icon": "general"
+        },
+        {
+          "name": "Patios and paths",
+          "description": "Indian sandstone, porcelain and block paving laid on a proper sub-base.",
+          "icon": "exterior"
+        },
+        {
+          "name": "Fencing",
+          "description": "Closeboard and slatted fences with concrete posts.",
+          "icon": "deck"
+        },
+        {
+          "name": "Lawn care",
+          "description": "New turf, levelling and seasonal feeding.",
+          "icon": "general"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "variant": "withImage",
+      "title": "How a job goes",
+      "body": "We visit, measure and talk through what you want, then send a drawing and a fixed quote. The price you sign is the price you pay.",
+      "image": {
+        "url": "https://images.pexels.com/photos/3999647/pexels-photo-3999647.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "alt": "Red lawn mower on a freshly cut lawn"
+      }
+    },
+    {
+      "type": "reviews",
+      "variant": "spotlight",
+      "title": "What neighbours say",
+      "items": [
+        {
+          "author": "Sophie Allen",
+          "rating": 5,
+          "text": "Our patio looks like it came out of a magazine. Spotless finish."
+        },
+        {
+          "author": "Rob Hughes",
+          "rating": 5,
+          "text": "Turned up when they said, every day, and the quote didn't change."
+        },
+        {
+          "author": "Priya Shah",
+          "rating": 5,
+          "text": "Brilliant ideas for a small, sloping garden."
+        }
+      ]
+    },
+    {
+      "type": "areas",
+      "title": "Where we work",
+      "areas": [
+        "Headingley",
+        "Horsforth",
+        "Roundhay",
+        "Chapel Allerton",
+        "Otley",
+        "Ilkley"
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Tell us about your garden",
+      "body": "Call or send a few photos and we'll book a free design visit."
+    }
+  ]
+}
